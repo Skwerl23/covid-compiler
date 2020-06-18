@@ -1,5 +1,5 @@
 # covid-compiler
-This is a tool to upload covid data compiled from multiple sources - Built on windows, doesn't support linux/mac by default see below
+This is a tool to compare covid data compiled from multiple sources - Built on windows, doesn't support linux/mac by default see below
 
 Currently it compiles John Hopkins, covidtracking.com and CDC Excess death numbers.
 Please note, that by default, it checks the servers no more than once every 6 hours to minimize web usage.
