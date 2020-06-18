@@ -23,8 +23,7 @@ chartJHU = chartJHU[chartJHU["Location"] != "Recovered" ]
 chartCDCExcess = pd.read_csv(CDCExcessFolder + "CDCExcess.csv")
 chartCDCExcess = chartCDCExcess.rename(columns={"State": "Location"})
 
-# Build covidtracking Charts
-
+# Build covidtracking.com Charts
 chartCTS = pd.read_csv(covidTrackingFolder + "covidtrackingstates.csv")
 chartCTS = chartCTS.rename(columns={'state': 'Location', "death": "covidtracking.com Death Count"})
 chartCTS = chartCTS.replace('AK', 'Alaska')
