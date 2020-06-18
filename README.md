@@ -11,7 +11,7 @@ EXAMPLE: python3 main.py
 
 ![alt text](https://github.com/Skwerl23/covid-compiler/blob/master/example.png?raw=true)
 
-Dependencies: Plotly, Pandas
+DEPENDENCIES: Plotly, Pandas
 
 
 
