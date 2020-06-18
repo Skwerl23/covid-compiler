@@ -9,6 +9,8 @@ EXAMPLE: python3 main.py
 
 ---this will run the code, generate the html document and open it in your default browser
 
+![alt text](https://github.com/Skwerl23/covid-compiler/blob/master/example.png?raw=true)
+
 Dependencies: Plotly, Pandas
 
 
