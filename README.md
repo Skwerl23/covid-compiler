@@ -6,7 +6,8 @@ Please note, that by default, it checks the servers no more than once every 6 ho
 
 
 EXAMPLE: python3 main.py
-this will run the code, generate the html document and open it in your default browser
+
+---this will run the code, generate the html document and open it in your default browser
 
 Dependencies: Plotly, Pandas
 
