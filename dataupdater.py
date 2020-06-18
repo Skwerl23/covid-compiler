@@ -57,6 +57,7 @@ def CDCExcess():
     CDCExcessFolder = "c:\\temp\\covid19\\CDCExcess\\"
     file = "CDCExcess.csv"
     url = "https://data.cdc.gov/api/views/xkkf-xrst/rows.csv"
+        # If this URL changes, then the page https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm will need to be scraped
     try: os.mkdir(CDCExcessFolder)
     except: pass
     lastCheck = lastUpdate(CDCExcessFolder)
@@ -64,7 +65,6 @@ def CDCExcess():
         print("CDC Excess Deaths already up to date!")
     else:
         print("Updating CDC Excess Deaths!")
-            # If this URL changes, then the page https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm will need to be scraped
         download(url, CDCExcessFolder, file)
         log(CDCExcessFolder)
 
