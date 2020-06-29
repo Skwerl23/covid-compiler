@@ -21,7 +21,7 @@ app = dash.Dash()
 
 app.layout = html.Div([
     html.Div(html.H1(children="Covid-19 Comparison Charts:")),
-    html.Div([html.H2("Covid 19 Cases compared:"),
+    html.Div([html.H2("Covid 19 Total Cases:"),
         html.Div(
             dcc.Graph(id="Cases",
                       figure=casesFig)
@@ -31,7 +31,7 @@ app.layout = html.Div([
         'width': '50%',
         'float': 'left'
     }),
-    html.Div([html.H2("Covid 19 Deaths compared:"),
+    html.Div([html.H2("Covid 19 Total Deaths:"),
         html.Div(
             dcc.Graph(id="Deaths",
                       figure=deathFig)
