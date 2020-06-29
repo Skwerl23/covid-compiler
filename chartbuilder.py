@@ -10,7 +10,7 @@ def deathChart():
     # Build John Hopkins Chart
     chartJHU = False
     chartJHU = pd.concat(pd.read_csv(jhuFolder + csv) for csv in os.listdir(jhuFolder))
-    chartJHU = chartJHU.rename(columns={'Province_State': 'Location', "Last_Update": "Date", "Deaths": "John Hopkins Death Count"})
+    chartJHU = chartJHU.rename(columns={'Province_State': 'Location', "Last_Update": "Date", "Deaths": "John Hopkins Total Deaths"})
     chartJHU = chartJHU[chartJHU["Location"] != "Recovered" ]
 
     # Build CDC Chart
@@ -19,7 +19,7 @@ def deathChart():
 
     # Build covidtracking.com Charts
     chartCTS = pd.read_csv(covidTrackingFolder + "covidtrackingstates.csv")
-    chartCTS = chartCTS.rename(columns={'state': 'Location', "death": "covidtracking.com Death Count"})
+    chartCTS = chartCTS.rename(columns={'state': 'Location', "death": "covidtracking.com Total Deaths"})
     chartCTS = chartCTS.replace('AK', 'Alaska')
     chartCTS = chartCTS.replace('AL', 'Alabama')
     chartCTS = chartCTS.replace('AR', 'Arkansas')
@@ -78,7 +78,7 @@ def deathChart():
     chartCTS = chartCTS.replace('WY', 'Wyoming')
 
     chartCTU = pd.read_csv(covidTrackingFolder + "covidtrackingusa.csv")
-    chartCTU = chartCTU.rename(columns={'state': 'Location', "death": "covidtracking.com Death Count"})
+    chartCTU = chartCTU.rename(columns={'state': 'Location', "death": "covidtracking.com Total Deaths"})
     chartCTU["Location"] = "United States"
     chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
 
@@ -111,7 +111,7 @@ def deathChart():
     chartCDCLower = chartCDCLower.replace("New York", "This Doesn't Exist") # Corrects New York
 
     # Build initial plot line from John Hopkins Data
-    fig = px.line(chartJHU, x='Date', y = "John Hopkins Death Count", title='Deaths by Location', line_group="Location", color="Location")
+    fig = px.line(chartJHU, x='Date', y = "John Hopkins Total Deaths", title='Deaths by Location', line_group="Location", color="Location")
 
     # Build and Add Plot Line of CDC Excess Deaths added to graph
     for state in states:
@@ -128,9 +128,9 @@ def deathChart():
     for state in states:
         try:
             chartCTStemp = chartCTS.loc[chartCTS["Location"] == state]
-            fig.add_trace(px.line(chartCTStemp, x="dateModified", y='covidtracking.com Death Count', title="covidtracking.com Death Count", line_group="Location", color="Location", color_discrete_map={state: "black"}).data[0])
+            fig.add_trace(px.line(chartCTStemp, x="dateModified", y='covidtracking.com Total Deaths', title="covidtracking.com Total Deaths", line_group="Location", color="Location", color_discrete_map={state: "black"}).data[0])
         except: continue
-    fig.add_trace(px.line(chartCTU, x="dateChecked", y='covidtracking.com Death Count', title="covidtracking.com Death Count", line_group="Location", color="Location", color_discrete_map={"United States": "black"}).data[0])
+    fig.add_trace(px.line(chartCTU, x="dateChecked", y='covidtracking.com Total Deaths', title="covidtracking.com Total Deaths", line_group="Location", color="Location", color_discrete_map={"United States": "black"}).data[0])
 
 
     # These are to add up New york numbers since they're divided (previously city and state)
@@ -141,10 +141,10 @@ def deathChart():
 
     # Plot sEntire USA John Hopkins Numbers onto graph
     chartUSAJHU = chartJHU
-    chartUSAJHU["John Hopkins Death Count"] = chartUSAJHU.groupby('Date')["John Hopkins Death Count"].transform('sum') # Combines USA
+    chartUSAJHU["John Hopkins Total Deaths"] = chartUSAJHU.groupby('Date')["John Hopkins Total Deaths"].transform('sum') # Combines USA
     chartUSAJHU = chartUSAJHU.loc[chartUSAJHU["Location"] == "Alabama"] # Combines USA
     chartUSAJHU = chartUSAJHU.replace("Alabama", "United States") # Combines USA
-    fig.add_trace(px.line(chartUSAJHU, x="Date", y="John Hopkins Death Count", title="John Hopkins Death Count", line_group="Location", color="Location", color_discrete_map={"United States": "green"}).data[0])
+    fig.add_trace(px.line(chartUSAJHU, x="Date", y="John Hopkins Total Deaths", title="John Hopkins Total Deaths", line_group="Location", color="Location", color_discrete_map={"United States": "green"}).data[0])
     # updates the look of the graph
     fig.update_layout(
     #    updatemenus=list([dict(buttons=list_updatemenus)]), # doesn't work, misaligns all the states
@@ -152,7 +152,9 @@ def deathChart():
         autosize=True,
         margin=dict(t=0, b=0, l=0, r=0),
         template="plotly_white",
-        hovermode="x"
+        hovermode="x",
+        yaxis_title = "Total Deaths",
+        xaxis_title = "Date"
     )
     return fig
 
@@ -165,12 +167,12 @@ def casesChart():
     # Build John Hopkins Chart
     chartJHU = False
     chartJHU = pd.concat(pd.read_csv(jhuFolder + csv) for csv in os.listdir(jhuFolder))
-    chartJHU = chartJHU.rename(columns={'Province_State': 'Location', "Last_Update": "Date", "Confirmed": "John Hopkins Cases Count"})
+    chartJHU = chartJHU.rename(columns={'Province_State': 'Location', "Last_Update": "Date", "Confirmed": "John Hopkins Total Cases"})
     chartJHU = chartJHU[chartJHU["Location"] != "Recovered" ]
 
     # Build covidtracking.com Charts
     chartCTS = pd.read_csv(covidTrackingFolder + "covidtrackingstates.csv")
-    chartCTS = chartCTS.rename(columns={'state': 'Location', "positive": "covidtracking.com Cases Count"})
+    chartCTS = chartCTS.rename(columns={'state': 'Location', "positive": "covidtracking.com Total Cases"})
     chartCTS = chartCTS.replace('AK', 'Alaska')
     chartCTS = chartCTS.replace('AL', 'Alabama')
     chartCTS = chartCTS.replace('AR', 'Arkansas')
@@ -229,7 +231,7 @@ def casesChart():
     chartCTS = chartCTS.replace('WY', 'Wyoming')
 
     chartCTU = pd.read_csv(covidTrackingFolder + "covidtrackingusa.csv")
-    chartCTU = chartCTU.rename(columns={'state': 'Location', "positive": "covidtracking.com Cases Count"})
+    chartCTU = chartCTU.rename(columns={'state': 'Location', "positive": "covidtracking.com Total Cases"})
     chartCTU["Location"] = "United States"
     chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
 
@@ -240,22 +242,22 @@ def casesChart():
     states = sorted(states)
 
     # Build initial plot line from John Hopkins Data
-    fig = px.line(chartJHU, x='Date', y = "John Hopkins Cases Count", title='Deaths by Location', line_group="Location", color="Location")
+    fig = px.line(chartJHU, x='Date', y = "John Hopkins Total Cases", title='Deaths by Location', line_group="Location", color="Location")
 
     #Build and add plot line for covidtracking to graph
     for state in states:
         try:
             chartCTStemp = chartCTS.loc[chartCTS["Location"] == state]
-            fig.add_trace(px.line(chartCTStemp, x="dateModified", y='covidtracking.com Cases Count', title="covidtracking.com Cases Count", line_group="Location", color="Location", color_discrete_map={state: "black"}).data[0])
+            fig.add_trace(px.line(chartCTStemp, x="dateModified", y='covidtracking.com Total Cases', title="covidtracking.com Total Cases", line_group="Location", color="Location", color_discrete_map={state: "black"}).data[0])
         except: continue
-    fig.add_trace(px.line(chartCTU, x="dateChecked", y='covidtracking.com Cases Count', title="covidtracking.com Cases Count", line_group="Location", color="Location", color_discrete_map={"United States": "black"}).data[0])
+    fig.add_trace(px.line(chartCTU, x="dateChecked", y='covidtracking.com Total Cases', title="covidtracking.com Total Cases", line_group="Location", color="Location", color_discrete_map={"United States": "black"}).data[0])
 
     # Plot sEntire USA John Hopkins Numbers onto graph
     chartUSAJHU = chartJHU
-    chartUSAJHU["John Hopkins Cases Count"] = chartUSAJHU.groupby('Date')["John Hopkins Cases Count"].transform('sum') # Combines USA
+    chartUSAJHU["John Hopkins Total Cases"] = chartUSAJHU.groupby('Date')["John Hopkins Total Cases"].transform('sum') # Combines USA
     chartUSAJHU = chartUSAJHU.loc[chartUSAJHU["Location"] == "Alabama"] # Combines USA
     chartUSAJHU = chartUSAJHU.replace("Alabama", "United States") # Combines USA
-    fig.add_trace(px.line(chartUSAJHU, x="Date", y="John Hopkins Cases Count", title="John Hopkins Cases Count", line_group="Location", color="Location", color_discrete_map={"United States": "green"}).data[0])
+    fig.add_trace(px.line(chartUSAJHU, x="Date", y="John Hopkins Total Cases", title="John Hopkins Total Cases", line_group="Location", color="Location", color_discrete_map={"United States": "green"}).data[0])
     # updates the look of the graph
     fig.update_layout(
     #    updatemenus=list([dict(buttons=list_updatemenus)]), # doesn't work, misaligns all the states
@@ -264,6 +266,9 @@ def casesChart():
 
         margin=dict(t=0, b=0, l=0, r=0),
         template="plotly_white",
-        hovermode="x"
+        hovermode="x",
+        yaxis_title="Total Cases",
+        xaxis_title="Date"
+
     )
     return fig
