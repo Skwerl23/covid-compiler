@@ -3,6 +3,10 @@ This is a tool to compare covid data compiled from multiple sources - Built on w
 
 Currently it compiles John Hopkins, covidtracking.com and CDC Excess death numbers.
 
+Version 0.3 updated:
+
+--added cases/deaths per day charts.
+
 Version 0.2 updated:
 
 --added cases count chart.
