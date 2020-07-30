@@ -80,7 +80,7 @@ def deathChart():
     chartCTU = pd.read_csv(covidTrackingFolder + "covidtrackingusa.csv")
     chartCTU = chartCTU.rename(columns={'state': 'Location', "death": "covidtracking.com Total Deaths"})
     chartCTU["Location"] = "United States"
-    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
 
     #Build State list based on John Hopkins List - As it's a giant spreadsheet
     states = set(chartJHU['Location'])
@@ -91,7 +91,7 @@ def deathChart():
     # Customize Lists into smaller chunks for plotting - Specifically Higher CDC Estimates
     chartCDCHigher = chartCDCExcess.loc[chartCDCExcess["Type"] == "Predicted (weighted)"]
     chartCDCHigher = chartCDCHigher.loc[chartCDCHigher["Outcome"] == "All causes"]
-    chartCDCHigher = chartCDCHigher.loc[chartCDCHigher["Week Ending Date"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCDCHigher = chartCDCHigher.loc[chartCDCHigher["Week Ending Date"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
     chartCDCHigher = chartCDCHigher.rename(columns={'Excess Higher Estimate': 'CDC Excess Higher Estimate', "Week Ending Date": "Date"})
 
     # New york was divided into city/state, so this brings them back together
@@ -102,7 +102,7 @@ def deathChart():
     # Customize Lists into smaller chunks for plotting - Specifically Lower CDC Estimates
     chartCDCLower = chartCDCExcess.loc[chartCDCExcess["Type"] == "Predicted (weighted)"]
     chartCDCLower = chartCDCLower.loc[chartCDCLower["Outcome"] == "All causes"]
-    chartCDCLower = chartCDCLower.loc[chartCDCLower["Week Ending Date"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCDCLower = chartCDCLower.loc[chartCDCLower["Week Ending Date"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
     chartCDCLower = chartCDCLower.rename(columns={'Excess Lower Estimate': 'CDC Excess Lower Estimate', "Week Ending Date": "Date"})
 
     # New york was divided into city/state, so this brings them back together
@@ -118,8 +118,8 @@ def deathChart():
         try:
             chartTempHigher = chartCDCHigher.loc[chartCDCHigher["Location"] == state]
             chartTempLower = chartCDCLower.loc[chartCDCLower["Location"] == state]
-            chartTempHigher['CDC Excess Higher Estimate'] = chartTempHigher['CDC Excess Higher Estimate'].rolling(min_periods=1, window=15).sum()
-            chartTempLower['CDC Excess Lower Estimate'] = chartTempLower['CDC Excess Lower Estimate'].rolling(min_periods=1, window=15).sum()
+            chartTempHigher['CDC Excess Higher Estimate'] = chartTempHigher['CDC Excess Higher Estimate'].rolling(min_periods=1, window=100).sum()
+            chartTempLower['CDC Excess Lower Estimate'] = chartTempLower['CDC Excess Lower Estimate'].rolling(min_periods=1, window=100).sum()
             fig.add_trace(px.line(chartTempHigher, x="Date", y='CDC Excess Higher Estimate', title="Excess Deaths Upper Limit", line_group="Location", color="Location", color_discrete_map={state: "red"}).data[0])
             fig.add_trace(px.line(chartTempLower, x="Date", y='CDC Excess Lower Estimate', title="Excess Deaths Lower Limit", line_group="Location", color="Location", color_discrete_map={state: "blue"}).data[0])
         except: continue
@@ -134,9 +134,9 @@ def deathChart():
 
 
     # These are to add up New york numbers since they're divided (previously city and state)
-    chartCDCLowerNY['CDC Excess Lower Estimate'] = chartCDCLowerNY['CDC Excess Lower Estimate'].rolling(min_periods=1, window=15).sum()
+    chartCDCLowerNY['CDC Excess Lower Estimate'] = chartCDCLowerNY['CDC Excess Lower Estimate'].rolling(min_periods=1, window=100).sum()
     fig.add_trace(px.line(chartCDCLowerNY, x="Date", y='CDC Excess Lower Estimate', title="Excess Deaths Lower Limit", line_group="Location", color="Location", color_discrete_map={"New York": "blue"}).data[0])
-    chartCDCHigherNY['CDC Excess Higher Estimate'] = chartCDCHigherNY['CDC Excess Higher Estimate'].rolling(min_periods=1, window=15).sum()
+    chartCDCHigherNY['CDC Excess Higher Estimate'] = chartCDCHigherNY['CDC Excess Higher Estimate'].rolling(min_periods=1, window=100).sum()
     fig.add_trace(px.line(chartCDCHigherNY, x="Date", y='CDC Excess Higher Estimate', title="Excess CDC Excess Higher Estimate", line_group="Location", color="Location", color_discrete_map={"New York": "red"}).data[0])
 
     # Plot sEntire USA John Hopkins Numbers onto graph
@@ -232,7 +232,7 @@ def casesChart():
     chartCTU = pd.read_csv(covidTrackingFolder + "covidtrackingusa.csv")
     chartCTU = chartCTU.rename(columns={'state': 'Location', "positive": "covidtracking.com Total Cases"})
     chartCTU["Location"] = "United States"
-    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
 
     #Build State list based on John Hopkins List - As it's a giant spreadsheet
     states = set(chartJHU['Location'])
@@ -351,7 +351,7 @@ def deathDayChart():
     chartCTU = pd.read_csv(covidTrackingFolder + "covidtrackingusa.csv")
     chartCTU = chartCTU.rename(columns={'state': 'Location', "deathIncrease": "covidtracking.com Deaths Per Day"})
     chartCTU["Location"] = "United States"
-    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
 
     #Build State list based on John Hopkins List - As it's a giant spreadsheet
     states = set(chartJHU['Location'])
@@ -373,7 +373,7 @@ def deathDayChart():
     # Customize Lists into smaller chunks for plotting - Specifically Higher CDC Estimates
     chartCDCHigher = chartCDCExcess.loc[chartCDCExcess["Type"] == "Predicted (weighted)"]
     chartCDCHigher = chartCDCHigher.loc[chartCDCHigher["Outcome"] == "All causes"]
-    chartCDCHigher = chartCDCHigher.loc[chartCDCHigher["Week Ending Date"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCDCHigher = chartCDCHigher.loc[chartCDCHigher["Week Ending Date"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
     chartCDCHigher = chartCDCHigher.rename(columns={'Excess Higher Estimate': 'CDC Excess Higher Estimate (week avg)', "Week Ending Date": "Date"})
 
     # New york was divided into city/state, so this brings them back together
@@ -384,7 +384,7 @@ def deathDayChart():
     # Customize Lists into smaller chunks for plotting - Specifically Lower CDC Estimate (week avg)s
     chartCDCLower = chartCDCExcess.loc[chartCDCExcess["Type"] == "Predicted (weighted)"]
     chartCDCLower = chartCDCLower.loc[chartCDCLower["Outcome"] == "All causes"]
-    chartCDCLower = chartCDCLower.loc[chartCDCLower["Week Ending Date"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCDCLower = chartCDCLower.loc[chartCDCLower["Week Ending Date"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
     chartCDCLower = chartCDCLower.rename(columns={'Excess Lower Estimate': 'CDC Excess Lower Estimate (week avg)', "Week Ending Date": "Date"})
 
     # New york was divided into city/state, so this brings them back together
@@ -505,7 +505,7 @@ def casesDayChart():
     chartCTU = pd.read_csv(covidTrackingFolder + "covidtrackingusa.csv")
     chartCTU = chartCTU.rename(columns={'state': 'Location', "positiveIncrease": "covidtracking.com Cases Per Day"})
     chartCTU["Location"] = "United States"
-    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
+    chartCTU = chartCTU.loc[chartCTU["dateChecked"].str.contains('^2020-02|2020-03|^2020-04|^2020-05|^2020-06|^2020-07')]
 
     #Build State list based on John Hopkins List - As it's a giant spreadsheet
     states = set(chartJHU['Location'])
